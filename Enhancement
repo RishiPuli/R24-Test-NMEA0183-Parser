@@ -1,0 +1,36 @@
+struct gps_common_t {
+    float lat;
+    float lon;
+};
+
+struct gps_gga_t {
+    struct gps_common_t common;
+    char time[8];
+    int satc;
+    float hdop;
+    float altitude;
+    float geoid_sep_metres;
+};
+
+struct gps_gll_t {
+    struct gps_common_t common;
+    float time;
+    int flags;
+};
+
+// Determine the maximum size needed for either GGA or GLL data
+size_t max_size = sizeof(struct gps_common_t) + 
+                  (sizeof(char) * 8) +  // size of time field
+                  sizeof(int) +        // size of satc field
+                  (sizeof(float) * 3); // size of hdop, altitude, and geoid_sep_metres fields
+
+// Allocate memory for the larger of the two structures
+struct gps_common_t* gps_data = malloc(max_size);
+
+// Now you can access either GGA or GLL data using the common fields
+// For example:
+// gps_data->lat
+// gps_data->lon
+
+// After you're done, remember to free the allocated memory
+free(gps_data);
